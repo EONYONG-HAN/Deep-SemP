@@ -16,7 +16,14 @@
 # configs/paths.sh is git-ignored, so your local paths never get committed.
 # =============================================================================
 
-# ---- Reference & training inputs (Step 1 / Step 2) --------------------------
+# ---- Step 1 inputs: embedding + read simulation -----------------------------
+export DEEPSEMP_PROTEOME_FASTA="/path/to/reference/proteome.fa"    # input to embed_esm2.py (amino-acid FASTA)
+export DEEPSEMP_EMBED_OUTDIR="/path/to/embeddings"                 # where embed_esm2.py writes esm2_embeddings.npy + protein_ids.txt
+export DEEPSEMP_GPU="2"                                            # GPU id for embed_esm2.py (sets CUDA_VISIBLE_DEVICES)
+export DEEPSEMP_CDNA_FASTA="/path/to/reference/cdna.fa.gz"         # input to simulate_reads.R (transcriptome cDNA)
+export DEEPSEMP_SIM_OUTDIR="/path/to/simulation/polyester_illumina5"  # polyester output dir
+
+# ---- Clustering + training inputs (Step 1 / Step 2) -------------------------
 export DEEPSEMP_EMBEDDINGS="/path/to/esm2_embeddings.npy"          # ESM-2 mean-pooled proteome embeddings (num_seqs x 1280)
 export DEEPSEMP_TRANSCRIPTS_TSV="/path/to/transcripts.tsv"         # transcript_id, gene_id table (for isoform-integrity metric)
 export TEACHER_WEIGHTS="/path/to/teacher/best_model.pt"            # DNABERT-2 teacher checkpoint

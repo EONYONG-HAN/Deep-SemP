@@ -23,15 +23,20 @@ from variables at the top of the file (e.g. the analysis scripts) are noted inli
 **Goal:** assign every reference transcript to one of `K = 50` buckets, to serve as
 ground-truth labels for training.
 
-**1a. Embed the proteome with ESM-2** *(script to be added — see
-`pipeline/step1_semantic_map/README.md`)*
+**1a. Embed the proteome with ESM-2**
 
-Run ESM-2 `facebook/esm2_t33_650M_UR50D` (650 M params) over the reference proteome,
-mean-pool the residue embeddings to one 1,280-dim vector per sequence, and save
-`esm2_embeddings.npy` (shape `num_seqs × 1280`).
+Runs ESM-2 `facebook/esm2_t33_650M_UR50D` (650 M params) over the reference proteome,
+mean-pools the residue embeddings (padding-masked, CLS/EOS excluded) to one 1,280-dim
+vector per sequence, and saves `esm2_embeddings.npy` + `protein_ids.txt`.
 
 ```bash
-export DEEPSEMP_EMBEDDINGS=/path/to/esm2_embeddings.npy
+export DEEPSEMP_PROTEOME_FASTA=/path/to/reference/proteome.fa
+export DEEPSEMP_EMBED_OUTDIR=/path/to/embeddings
+export DEEPSEMP_GPU=2                          # GPU id for embedding
+python pipeline/step1_semantic_map/embed_esm2.py
+
+# point the clustering step at the output
+export DEEPSEMP_EMBEDDINGS=$DEEPSEMP_EMBED_OUTDIR/esm2_embeddings.npy
 export DEEPSEMP_TRANSCRIPTS_TSV=/path/to/transcripts.tsv   # transcript_id, gene_id
 ```
 
@@ -51,11 +56,21 @@ python pipeline/step1_semantic_map/benchmark_leiden.py
 **Outputs:** clustering metric plots/tables, and the 31,865-transcript → 50-bucket
 **semantic map** used as labels below.
 
-**1c. Simulate training reads** *(script to be added)*
+**1c. Simulate training reads**
 
-Use polyester to simulate paired-end 100 bp reads from the reference transcriptome
-under the `illumina5` error profile (0.5% error), tagged with each read's bucket
-label, written as `simulation_data_illumina5_train.csv` and `..._simval.csv`.
+Simulates paired-end 100 bp reads from the reference cDNA under the polyester
+`illumina5` error profile (0.5% error), 3+3 replicates, with length-proportional
+coverage.
+
+```bash
+export DEEPSEMP_CDNA_FASTA=/path/to/reference/cdna.fa.gz
+export DEEPSEMP_SIM_OUTDIR=/path/to/simulation/polyester_illumina5
+Rscript pipeline/step1_semantic_map/simulate_reads.R
+```
+
+The polyester FASTQ output is then parsed and each read tagged with its transcript's
+bucket label (from the semantic map) to build `simulation_data_illumina5_train.csv`
+and `..._simval.csv` for Step 2. *(This label-attachment step is done separately.)*
 
 ---
 

@@ -4,8 +4,9 @@
 # see https://pytorch.org for the command matching your CUDA version.
 
 torch>=2.0
-transformers>=4.30        # DNABERT-2 teacher (trust_remote_code)
+transformers>=4.30        # DNABERT-2 teacher + ESM-2 embedding (trust_remote_code)
 einops                    # required by DNABERT-2 remote code
+biopython                 # FASTA parsing in embed_esm2.py (Bio.SeqIO)
 numpy
 pandas
 scipy

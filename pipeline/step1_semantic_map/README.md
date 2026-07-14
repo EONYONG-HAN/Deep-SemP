@@ -7,41 +7,39 @@ for training (Step 2).
 ## Flow
 
 ```
-proteome (.faa)
-   │  embed_esm2.py            ← ESM-2 mean-pooled embeddings  [TO ADD]
+proteome (.fa)
+   │  embed_esm2.py            ← ESM-2 mean-pooled embeddings (facebook/esm2_t33_650M_UR50D)
    ▼
 esm2_embeddings.npy  ──►  cluster_eval.py            (silhouette / CH sweep, K=10–100 → Fig S1)
-                     ──►  benchmark_clustering.py     (Table 1: evenness + isoform integrity)
+(+ protein_ids.txt)  ──►  benchmark_clustering.py     (Table 1: evenness + isoform integrity)
                      ──►  benchmark_leiden.py         (Leiden/Louvain resolution comparison)
    │
    ▼
-polyester simulation (.R)      ← simulated training reads      [TO ADD]
+cDNA (.fa.gz)
+   │  simulate_reads.R         ← polyester, illumina5 profile, 0.5% error, 100 bp, 3+3 reps
    ▼
-simulation_data_*.csv  ──►  Step 2 (train_teacher.py / distill_student.py)
+simulated FASTQ  ──►  (parse + attach bucket labels)  ──►  simulation_data_*.csv
+   ▼
+Step 2 (train_teacher.py / distill_student.py)
 ```
 
-## Scripts present
+## Scripts
 
 | Script | Purpose | Paper artifact |
 |---|---|---|
+| `embed_esm2.py` | ESM-2 (`esm2_t33_650M_UR50D`) over the proteome; padding-masked mean pooling → `esm2_embeddings.npy` (+ `protein_ids.txt`) | 1,280-dim embeddings |
+| `simulate_reads.R` | polyester paired-end simulation, `illumina5` profile, 0.5% error, 100 bp, 3+3 reps, length-proportional coverage | illumina5 training reads |
 | `cluster_eval.py` | Agglomerative (Ward) clustering across `K=10–100`; silhouette + Calinski-Harabasz | Fig S1; K=50 selection |
 | `benchmark_clustering.py` | Compares K-Means / DBSCAN / Leiden / Hierarchical on evenness (CV) + isoform integrity | Table 1 |
 | `benchmark_leiden.py` | Leiden/Louvain resolution search on the embedding graph | Table 1 (Leiden row) |
 
-All three read the embeddings via the `DEEPSEMP_EMBEDDINGS` environment variable
-(and `DEEPSEMP_TRANSCRIPTS_TSV` for the isoform-integrity metric). See
-`configs/paths.example.sh`.
+**Paths** — all scripts read their inputs from environment variables (see
+`configs/paths.example.sh`): `DEEPSEMP_PROTEOME_FASTA` + `DEEPSEMP_EMBED_OUTDIR` +
+`DEEPSEMP_GPU` for embedding, `DEEPSEMP_CDNA_FASTA` + `DEEPSEMP_SIM_OUTDIR` for
+simulation, and `DEEPSEMP_EMBEDDINGS` (+ `DEEPSEMP_TRANSCRIPTS_TSV`) for clustering.
+Each falls back to the original server default if the variable is unset.
 
-## Scripts to add (upstream, not yet in repo)
-
-These produce the inputs the scripts above consume. Drop them here when ready:
-
-- **`embed_esm2.py`** — run ESM-2 (`facebook/esm2_t33_650M_UR50D`, 650 M params) over
-  the reference proteome, mean-pool residue embeddings to a 1,280-dim vector per
-  sequence, and save `esm2_embeddings.npy` (shape `num_seqs × 1280`).
-- **`simulate_reads.R`** — polyester simulation of paired-end reads (100 bp) from the
-  reference transcriptome under the `illumina5` error profile (0.5% error), tagged
-  with the bucket label from the semantic map, written as the training/validation CSVs.
-
-Until added, the tutorial documents the exact model name and parameters so the
-step is reproducible.
+> **Remaining manual step:** after `simulate_reads.R`, the polyester FASTQ output is
+> parsed and each read tagged with its transcript's bucket label to build the
+> `simulation_data_illumina5_{train,simval}.csv` files consumed by Step 2. (Original
+> filenames: `generate_esm_vectors.py`, `generate_polyester_high_error.R`.)
