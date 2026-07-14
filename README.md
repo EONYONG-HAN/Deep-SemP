@@ -37,7 +37,6 @@ Deep-SemP/
 ├── analysis/            # scripts that regenerate paper figures & tables
 ├── benchmarks/          # throughput / batch-size / tokenization benchmarks
 ├── tests/               # partitioning-accuracy sanity checks
-├── legacy/              # superseded script versions (kept for provenance)
 ├── configs/             # paths.example.sh — central path configuration
 ├── docs/                # tutorial.md
 └── results/             # (git-ignored) data, models, figures, DBs, logs
