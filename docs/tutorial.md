@@ -233,5 +233,3 @@ Scripts in `analysis/` regenerate the manuscript figures from the evaluation out
   partitioning and mark the phylogenetic boundary.
 - **Read length:** train/tokenize at 100 bp; longer reads (151 bp) are truncated for
   routing but assembled at full length by Trinity.
-- **`legacy/`** holds earlier script versions for provenance; use the canonical scripts
-  in `pipeline/`.

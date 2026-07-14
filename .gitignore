@@ -3,6 +3,9 @@
 # Local path config (copy of paths.example.sh)
 configs/paths.sh
 
+# Superseded script versions — kept local only (originals live on the servers)
+legacy/
+
 # Large data, models, and all pipeline outputs
 results/
 data/
