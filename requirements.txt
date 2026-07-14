@@ -1,0 +1,18 @@
+# Deep-SemP Python dependencies (Step 1-4 scripts + analysis)
+# Install with:  pip install -r requirements.txt
+# GPU steps (teacher training, distillation, partitioning) require a CUDA build of torch;
+# see https://pytorch.org for the command matching your CUDA version.
+
+torch>=2.0
+transformers>=4.30        # DNABERT-2 teacher (trust_remote_code)
+einops                    # required by DNABERT-2 remote code
+numpy
+pandas
+scipy
+scikit-learn              # AgglomerativeClustering, silhouette / Calinski-Harabasz
+scanpy                    # Leiden/Louvain benchmark (uses igraph + leidenalg)
+anndata
+leidenalg                 # Leiden community detection
+python-igraph             # graph backend for Leiden/Louvain
+matplotlib
+tqdm

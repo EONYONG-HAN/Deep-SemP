@@ -1,0 +1,42 @@
+name: deep-semp
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # ---- Python + core ML/data stack ----
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - tqdm
+  # ---- clustering (Step 1) ----
+  - scanpy
+  - anndata
+  - leidenalg
+  - python-igraph
+  # ---- external bioinformatics tools (Steps 3-4) ----
+  - trinity            # de novo assembler
+  - jellyfish          # k-mer complexity
+  - cd-hit             # CD-HIT-EST redundancy removal
+  - cap3               # contig elongation
+  - minimap2           # splice-aware alignment
+  - stringtie          # transcript model reconstruction
+  - gffcompare         # structural precision
+  - bowtie2            # read alignment / mapping rate
+  - blast              # BLASTn unique-transcript / full-length
+  - busco              # assembly completeness
+  - zstd               # fast chunk compression for parallel routing
+  - pip:
+      # torch: install a CUDA build matching your driver (see pytorch.org)
+      - torch>=2.0
+      - transformers>=4.30
+      - einops
+# Notes:
+#   * CPC2 (Coding Potential Calculator 2) is installed separately from
+#     https://github.com/gao-lab/CPC2_standalone ; point $CPC2 at its bin/CPC2.py.
+#   * ESM-2 embedding generation (Step 1) uses the `fair-esm` package or the
+#     HuggingFace `facebook/esm2_t33_650M_UR50D` checkpoint — see pipeline/step1_semantic_map/README.md.
+#   * polyester (read simulation) is an R/Bioconductor package.
