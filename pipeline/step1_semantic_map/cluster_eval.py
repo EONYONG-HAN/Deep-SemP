@@ -63,7 +63,7 @@ def main():
     ax2.plot(K_VALUES, ch_scores, marker='s', color=color2, linewidth=2, linestyle='-.')
     ax2.tick_params(axis='y', labelcolor=color2)
 
-    plt.title('ESM-2 Embedding Clustering Metrics across K values', fontsize=14)
+    # title removed — Fig S1 title lives in the caption
     fig.tight_layout()
     
     plot_path = "clustering_metrics_evaluation.png"

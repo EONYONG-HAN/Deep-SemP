@@ -8,7 +8,7 @@ legacy/
 
 # Large data, models, and all pipeline outputs
 results/
-data/
+/data/
 *.npy
 *.pt
 *.ckpt
@@ -75,3 +75,11 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# --- Quickstart: keep toy data tracked; keep model + generated outputs untracked ---
+models/                                        # downloaded student model (from lab page)
+tutorial/out/                       # generated buckets + assembly
+!tutorial/data/                     # re-include (parent 'data/' rule ignores it)
+!tutorial/data/README.md
+!tutorial/data/toy_R1.fastq.gz
+!tutorial/data/toy_R2.fastq.gz

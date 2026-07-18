@@ -1,6 +1,8 @@
 # Deep-SemP — Deep Semantic Partitioning
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Model](https://img.shields.io/badge/model-download-blue.svg)](https://cobi.knu.ac.kr/tools/deepsemp/best_student_model.pt)
+[![Tutorial](https://img.shields.io/badge/tutorial-quickstart-green.svg)](tutorial/README.md)
 
 Reference-free RNA-seq de novo transcriptome assembly that **partitions reads into
 semantically coherent bins using ESM-2 protein embeddings before independent Trinity
@@ -37,10 +39,30 @@ Deep-SemP/
 ├── analysis/            # scripts that regenerate paper figures & tables
 ├── benchmarks/          # throughput / batch-size / tokenization benchmarks
 ├── tests/               # partitioning-accuracy sanity checks
+├── tutorial/            # toy end-to-end example (download model → route → assemble)
 ├── configs/             # paths.example.sh — central path configuration
 ├── docs/                # tutorial.md
+├── models/              # (git-ignored) downloaded student model
 └── results/             # (git-ignored) data, models, figures, DBs, logs
 ```
+
+## Pretrained model
+
+The trained 8-layer student model is hosted on the COBI lab page (it exceeds GitHub's
+free-tier size limit and is git-ignored here):
+
+```bash
+bash tutorial/download_model.sh          # -> models/best_student_model.pt
+```
+
+Direct link: https://cobi.knu.ac.kr/tools/deepsemp/best_student_model.pt
+
+## Try it in 5 minutes (toy example)
+
+New users should start with the toy quickstart — it downloads the model and runs
+routing + assembly on a ~few-MB sample, on CPU or GPU:
+
+**→ [`tutorial/README.md`](tutorial/README.md)**
 
 ## Quickstart
 

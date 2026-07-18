@@ -29,6 +29,7 @@ dependencies:
   - blast              # BLASTn unique-transcript / full-length
   - busco              # assembly completeness
   - zstd               # fast chunk compression for parallel routing
+  - seqtk              # subsample reads for the toy quickstart
   - pip:
       # torch: install a CUDA build matching your driver (see pytorch.org)
       - torch>=2.0
